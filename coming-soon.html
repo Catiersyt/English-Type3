@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>版本三 ASDF</title>
+<style>
+body{font-family:system-ui,'Microsoft JhengHei',sans-serif;margin:0;padding:24px;text-align:center;background:#fff;color:#222}
+button{font-size:18px;padding:10px 24px;border-radius:8px;border:1px solid #444;background:#f2f2f2;cursor:pointer}
+.row{display:flex;justify-content:center;gap:6px;margin:6px 0}
+.key{width:44px;height:44px;line-height:44px;border:1px solid #888;border-radius:6px;background:#eee;font-weight:bold}
+.key.on{background:#e53935;color:#fff;position:relative}
+.key.on::after{content:'';position:absolute;left:50%;bottom:4px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#fff}
+#big{font-size:96px;font-weight:bold;margin:10px}
+</style>
+</head>
+<body>
+<h1>英打遊戲版本三:ASDF</h1>
+<p>請切換英文輸入,使用實體鍵盤。</p>
+<div id="big">?</div>
+<p>分數:<b id="sc">0</b></p>
+<div id="kb"></div>
+<p><button id="go">開始</button> <button id="stop">停止練習</button></p>
+<p><a href="../index.html">回開發歷程首頁</a></p>
+<script>
+var rows = ["QWERTYUIOP", "ASDFGHJKL;", "ZXCVBNM,./"], keys = {};
+(function(){
+  var kb = document.getElementById("kb");
+  rows.forEach(function(r, i){
+    var d = document.createElement("div");
+    d.className = "row";
+    d.style.marginLeft = [0, 16, 40][i] + "px";
+    r.split("").forEach(function(c){
+      var k = document.createElement("span");
+      k.className = "key";
+      k.textContent = c;
+      d.appendChild(k);
+      keys[c] = k;
+    });
+    kb.appendChild(d);
+  });
+})();
+function light(c){
+  for (var k in keys) keys[k].classList.remove("on");
+  if (c && keys[c]) keys[c].classList.add("on");
+}
+
+var L = "ASDF", cur = null, score = 0, on = false;
+function nx(){
+  cur = L[Math.floor(Math.random() * 4)];
+  big.textContent = cur;
+  light(cur);
+}
+go.onclick = function(){
+  score = 0; sc.textContent = 0; on = true;
+  go.textContent = "重新開始";
+  nx(); go.blur();
+};
+stop.onclick = function(){
+  on = false; cur = null;
+  big.textContent = "?";
+  light(null);
+};
+document.addEventListener("keydown", function(e){
+  if (!on || e.repeat) return;
+  if (e.code === "Key" + cur){
+    score++; sc.textContent = score; nx();
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>版本三 ASDF</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:32px 16px;text-align:center;font-family:system-ui,'Microsoft JhengHei',sans-serif;color:#e2e8f0;background:linear-gradient(135deg,#0f172a,#1e293b 60%,#312e81)}
+h1{margin:0 0 6px;background:linear-gradient(90deg,#38bdf8,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:#94a3b8;margin:0 0 16px}
+#big{width:150px;height:150px;line-height:150px;margin:12px auto;border-radius:24px;font-size:88px;font-weight:bold;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.15);color:#fbbf24}
+.score{font-size:1.2rem}
+.score b{color:#38bdf8;font-size:1.6rem}
+#kb{margin:20px 0}
+.row{display:flex;justify-content:center;gap:6px;margin:6px 0}
+.key{width:44px;height:44px;line-height:44px;border-radius:8px;font-weight:bold;background:#1e293b;border:1px solid #475569;color:#cbd5e1;transition:all .1s}
+.key.on{background:#ef4444;border-color:#fecaca;color:#fff;transform:scale(1.15);box-shadow:0 0 16px #ef4444;position:relative}
+.key.on::after{content:'';position:absolute;left:50%;bottom:4px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#fff}
+button{font-size:17px;padding:10px 24px;margin:0 4px;border-radius:999px;border:0;cursor:pointer;color:#fff;background:linear-gradient(90deg,#0ea5e9,#6366f1)}
+button.s{background:#475569}
+button:hover{filter:brightness(1.15)}
+a{color:#38bdf8;text-decoration:none}
+</style>
+</head>
+<body>
+<h1>⌨️ 英打遊戲版本三:ASDF</h1>
+<p class="sub">請切換英文輸入,使用實體鍵盤</p>
+<div id="big">?</div>
+<p class="score">分數:<b id="sc">0</b></p>
+<div id="kb"></div>
+<p><button id="go">開始</button><button id="stop" class="s">停止練習</button></p>
+<p><a href="../index.html">← 回開發歷程首頁</a></p>
+<script>
+var rows = ["QWERTYUIOP", "ASDFGHJKL;", "ZXCVBNM,./"], keys = {};
+(function(){
+  var kb = document.getElementById("kb");
+  rows.forEach(function(r, i){
+    var d = document.createElement("div");
+    d.className = "row";
+    d.style.marginLeft = [0, 16, 40][i] + "px";
+    r.split("").forEach(function(c){
+      var k = document.createElement("span");
+      k.className = "key";
+      k.textContent = c;
+      d.appendChild(k);
+      keys[c] = k;
+    });
+    kb.appendChild(d);
+  });
+})();
+function light(c){
+  for (var k in keys) keys[k].classList.remove("on");
+  if (c && keys[c]) keys[c].classList.add("on");
+}
+
+var L = "ASDF", cur = null, score = 0, on = false;
+function nx(){
+  cur = L[Math.floor(Math.random() * 4)];
+  big.textContent = cur;
+  light(cur);
+}
+go.onclick = function(){
+  score = 0; sc.textContent = 0; on = true;
+  go.textContent = "重新開始";
+  nx(); go.blur();
+};
+stop.onclick = function(){
+  on = false; cur = null;
+  big.textContent = "?";
+  light(null);
+};
+document.addEventListener("keydown", function(e){
+  if (!on || e.repeat) return;
+  if (e.code === "Key" + cur){
+    score++; sc.textContent = score; nx();
+  }
+});
+</script>
+</body>
+</html>
